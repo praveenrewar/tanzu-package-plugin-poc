@@ -6,13 +6,14 @@ package commands
 import (
 	"github.com/spf13/cobra"
 
-	"tanzu-package-plugin-poc/packageclients/pkg/packageclient"
-	"tanzu-package-plugin-poc/packageclients/pkg/packagedatamodel"
+	"github.com/vmware-tanzu/tanzu-framework/packageclients/pkg/packageclient"
+	"github.com/vmware-tanzu/tanzu-framework/packageclients/pkg/packagedatamodel"
+	"tanzu-package-plugin-poc/pkg/package/flags"
 )
 
 var packageInstallOp = packagedatamodel.NewPackageOptions()
 
-var packageInstallCmd = &cobra.Command{
+var PackageInstallCmd = &cobra.Command{
 	Use:   "install INSTALLED_PACKAGE_NAME --package-name PACKAGE_NAME --version VERSION",
 	Short: "Install a package",
 	Args:  cobra.ExactArgs(1),
@@ -28,23 +29,23 @@ var packageInstallCmd = &cobra.Command{
 }
 
 func init() {
-	packageInstallCmd.Flags().StringVarP(&packageInstallOp.PackageName, "package-name", "p", "", "Name of the package to be installed")
-	packageInstallCmd.Flags().StringVarP(&packageInstallOp.Version, "version", "v", "", "Version of the package to be installed")
-	packageInstallCmd.Flags().BoolVarP(&packageInstallOp.CreateNamespace, "create-namespace", "", false, "Create namespace if the target namespace does not exist, optional")
-	packageInstallCmd.Flags().StringVarP(&packageInstallOp.Namespace, "namespace", "n", "default", "Namespace indicates the location of the repository from which the package is retrieved")
-	packageInstallCmd.Flags().StringVarP(&packageInstallOp.ServiceAccountName, "service-account-name", "", "", "Name of an existing service account used to install underlying package contents, optional")
-	packageInstallCmd.Flags().StringVarP(&packageInstallOp.ValuesFile, "values-file", "f", "", "The path to the configuration values file, optional")
-	packageInstallCmd.Flags().BoolVarP(&packageInstallOp.Wait, "wait", "", true, "Wait for the package reconciliation to complete, optional. To disable wait, specify --wait=false")
-	packageInstallCmd.Flags().DurationVarP(&packageInstallOp.PollInterval, "poll-interval", "", packagedatamodel.DefaultPollInterval, "Time interval between subsequent polls of package reconciliation status, optional")
-	packageInstallCmd.Flags().DurationVarP(&packageInstallOp.PollTimeout, "poll-timeout", "", packagedatamodel.DefaultPollTimeout, "Timeout value for polls of package reconciliation status, optional")
-	packageInstallCmd.MarkFlagRequired("package-name") //nolint
-	packageInstallCmd.MarkFlagRequired("version")      //nolint
+	PackageInstallCmd.Flags().StringVarP(&packageInstallOp.PackageName, "package-name", "p", "", "Name of the package to be installed")
+	PackageInstallCmd.Flags().StringVarP(&packageInstallOp.Version, "version", "v", "", "Version of the package to be installed")
+	PackageInstallCmd.Flags().BoolVarP(&packageInstallOp.CreateNamespace, "create-namespace", "", false, "Create namespace if the target namespace does not exist, optional")
+	PackageInstallCmd.Flags().StringVarP(&packageInstallOp.Namespace, "namespace", "n", "default", "Namespace indicates the location of the repository from which the package is retrieved")
+	PackageInstallCmd.Flags().StringVarP(&packageInstallOp.ServiceAccountName, "service-account-name", "", "", "Name of an existing service account used to install underlying package contents, optional")
+	PackageInstallCmd.Flags().StringVarP(&packageInstallOp.ValuesFile, "values-file", "f", "", "The path to the configuration values file, optional")
+	PackageInstallCmd.Flags().BoolVarP(&packageInstallOp.Wait, "wait", "", true, "Wait for the package reconciliation to complete, optional. To disable wait, specify --wait=false")
+	PackageInstallCmd.Flags().DurationVarP(&packageInstallOp.PollInterval, "poll-interval", "", packagedatamodel.DefaultPollInterval, "Time interval between subsequent polls of package reconciliation status, optional")
+	PackageInstallCmd.Flags().DurationVarP(&packageInstallOp.PollTimeout, "poll-timeout", "", packagedatamodel.DefaultPollTimeout, "Timeout value for polls of package reconciliation status, optional")
+	PackageInstallCmd.MarkFlagRequired("package-name") //nolint
+	PackageInstallCmd.MarkFlagRequired("version")      //nolint
 }
 
 func packageInstall(cmd *cobra.Command, args []string) error {
 	packageInstallOp.PkgInstallName = args[0]
 
-	pkgClient, err := packageclient.NewPackageClient(kubeConfig)
+	pkgClient, err := packageclient.NewPackageClient(flags.PersistentFlagsDefault.Kubeconfig)
 	if err != nil {
 		return err
 	}

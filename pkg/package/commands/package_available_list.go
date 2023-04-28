@@ -11,7 +11,8 @@ import (
 	"github.com/spf13/cobra"
 	"go.uber.org/multierr"
 
-	"tanzu-package-plugin-poc/packageclients/pkg/kappclient"
+	"github.com/vmware-tanzu/tanzu-framework/packageclients/pkg/kappclient"
+	"tanzu-package-plugin-poc/pkg/package/flags"
 
 	"github.com/vmware-tanzu/tanzu-plugin-runtime/component"
 )
@@ -32,11 +33,11 @@ var packageAvailableListCmd = &cobra.Command{
 
 func init() {
 	packageAvailableListCmd.Flags().BoolVarP(&packageAvailableOp.AllNamespaces, "all-namespaces", "A", false, "If present, list packages across all namespaces, optional")
-	packageAvailableCmd.AddCommand(packageAvailableListCmd)
+	PackageAvailableCmd.AddCommand(packageAvailableListCmd)
 }
 
 func packageAvailableList(cmd *cobra.Command, args []string) error {
-	kc, err := kappclient.NewKappClient(kubeConfig)
+	kc, err := kappclient.NewKappClient(flags.PersistentFlagsDefault.Kubeconfig)
 	if err != nil {
 		return err
 	}

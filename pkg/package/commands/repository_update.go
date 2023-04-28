@@ -6,8 +6,9 @@ package commands
 import (
 	"github.com/spf13/cobra"
 
-	"tanzu-package-plugin-poc/packageclients/pkg/packageclient"
-	"tanzu-package-plugin-poc/packageclients/pkg/packagedatamodel"
+	"github.com/vmware-tanzu/tanzu-framework/packageclients/pkg/packageclient"
+	"github.com/vmware-tanzu/tanzu-framework/packageclients/pkg/packagedatamodel"
+	"tanzu-package-plugin-poc/pkg/package/flags"
 )
 
 var repositoryUpdateCmd = &cobra.Command{
@@ -29,13 +30,13 @@ func init() {
 	repositoryUpdateCmd.Flags().DurationVarP(&repoOp.PollInterval, "poll-interval", "", packagedatamodel.DefaultPollInterval, "Time interval between subsequent polls of package repository reconciliation status, optional")
 	repositoryUpdateCmd.Flags().DurationVarP(&repoOp.PollTimeout, "poll-timeout", "", packagedatamodel.DefaultPollTimeout, "Timeout value for polls of package repository reconciliation status, optional")
 	repositoryUpdateCmd.MarkFlagRequired("url") //nolint
-	repositoryCmd.AddCommand(repositoryUpdateCmd)
+	PackageRepositoryCmd.AddCommand(repositoryUpdateCmd)
 }
 
 func repositoryUpdate(_ *cobra.Command, args []string) error {
 	repoOp.RepositoryName = args[0]
 
-	pkgClient, err := packageclient.NewPackageClient(kubeConfig)
+	pkgClient, err := packageclient.NewPackageClient(flags.PersistentFlagsDefault.Kubeconfig)
 	if err != nil {
 		return err
 	}

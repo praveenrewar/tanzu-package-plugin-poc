@@ -12,8 +12,9 @@ import (
 	"github.com/spf13/cobra"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 
-	"tanzu-package-plugin-poc/packageclients/pkg/kappclient"
-	"tanzu-package-plugin-poc/packageclients/pkg/packagedatamodel"
+	"github.com/vmware-tanzu/tanzu-framework/packageclients/pkg/kappclient"
+	"github.com/vmware-tanzu/tanzu-framework/packageclients/pkg/packagedatamodel"
+	"tanzu-package-plugin-poc/pkg/package/flags"
 
 	"github.com/vmware-tanzu/tanzu-plugin-runtime/component"
 )
@@ -33,11 +34,11 @@ func init() {
 	packageInstalledGetCmd.Flags().StringVarP(&packageInstalledOp.Namespace, "namespace", "n", "default", "Namespace for installed package CR, optional")
 	packageInstalledGetCmd.Flags().StringVarP(&packageInstalledOp.ValuesFile, "values-file", "f", "", "The path to the configuration values file, optional")
 	packageInstalledGetCmd.Flags().StringVarP(&outputFormat, "output", "o", "", "Output format (yaml|json|table), optional")
-	packageInstalledCmd.AddCommand(packageInstalledGetCmd)
+	PackageInstalledCmd.AddCommand(packageInstalledGetCmd)
 }
 
 func packageInstalledGet(cmd *cobra.Command, args []string) error {
-	kc, err := kappclient.NewKappClient(kubeConfig)
+	kc, err := kappclient.NewKappClient(flags.PersistentFlagsDefault.Kubeconfig)
 	if err != nil {
 		return err
 	}

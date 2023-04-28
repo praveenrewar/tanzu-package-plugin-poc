@@ -6,7 +6,7 @@ package commands
 import (
 	"github.com/spf13/cobra"
 
-	"tanzu-package-plugin-poc/packageclients/pkg/packagedatamodel"
+	"github.com/vmware-tanzu/tanzu-framework/packageclients/pkg/packagedatamodel"
 )
 
 var packageInstalledCreateCmd = &cobra.Command{
@@ -29,5 +29,5 @@ func init() {
 	packageInstalledCreateCmd.Flags().DurationVarP(&packageInstallOp.PollTimeout, "poll-timeout", "", packagedatamodel.DefaultPollTimeout, "Timeout value for polls of package reconciliation status, optional")
 	packageInstalledCreateCmd.MarkFlagRequired("package-name") //nolint
 	packageInstalledCreateCmd.MarkFlagRequired("version")      //nolint
-	packageInstalledCmd.AddCommand(packageInstalledCreateCmd)
+	PackageInstalledCmd.AddCommand(packageInstalledCreateCmd)
 }

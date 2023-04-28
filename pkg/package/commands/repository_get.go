@@ -9,7 +9,8 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 
-	"tanzu-package-plugin-poc/packageclients/pkg/packageclient"
+	"github.com/vmware-tanzu/tanzu-framework/packageclients/pkg/packageclient"
+	"tanzu-package-plugin-poc/pkg/package/flags"
 
 	"github.com/vmware-tanzu/tanzu-plugin-runtime/component"
 )
@@ -27,7 +28,7 @@ var repositoryGetCmd = &cobra.Command{
 
 func init() {
 	repositoryGetCmd.Flags().StringVarP(&outputFormat, "output", "o", "", "Output format (yaml|json|table), optional")
-	repositoryCmd.AddCommand(repositoryGetCmd)
+	PackageRepositoryCmd.AddCommand(repositoryGetCmd)
 }
 
 func repositoryGet(cmd *cobra.Command, args []string) error {
@@ -37,7 +38,7 @@ func repositoryGet(cmd *cobra.Command, args []string) error {
 		return errors.New("incorrect number of input parameters. Usage: tanzu package repository get REPOSITORY_NAME [FLAGS]")
 	}
 
-	pkgClient, err := packageclient.NewPackageClient(kubeConfig)
+	pkgClient, err := packageclient.NewPackageClient(flags.PersistentFlagsDefault.Kubeconfig)
 	if err != nil {
 		return err
 	}

@@ -7,8 +7,9 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 
-	"tanzu-package-plugin-poc/packageclients/pkg/packageclient"
-	"tanzu-package-plugin-poc/packageclients/pkg/packagedatamodel"
+	"github.com/vmware-tanzu/tanzu-framework/packageclients/pkg/packageclient"
+	"github.com/vmware-tanzu/tanzu-framework/packageclients/pkg/packagedatamodel"
+	"tanzu-package-plugin-poc/pkg/package/flags"
 )
 
 var packageInstalledUpdateCmd = &cobra.Command{
@@ -31,7 +32,7 @@ func init() {
 	packageInstalledUpdateCmd.Flags().BoolVarP(&packageInstalledOp.Wait, "wait", "", true, "Wait for the package reconciliation to complete, optional. To disable wait, specify --wait=false")
 	packageInstalledUpdateCmd.Flags().DurationVarP(&packageInstalledOp.PollInterval, "poll-interval", "", packagedatamodel.DefaultPollInterval, "Time interval between subsequent polls of package reconciliation status, optional")
 	packageInstalledUpdateCmd.Flags().DurationVarP(&packageInstalledOp.PollTimeout, "poll-timeout", "", packagedatamodel.DefaultPollTimeout, "Timeout value for polls of package reconciliation status, optional")
-	packageInstalledCmd.AddCommand(packageInstalledUpdateCmd)
+	PackageInstalledCmd.AddCommand(packageInstalledUpdateCmd)
 }
 
 func packageUpdate(cmd *cobra.Command, args []string) error {
@@ -50,7 +51,7 @@ func packageUpdate(cmd *cobra.Command, args []string) error {
 		}
 	}
 
-	pkgClient, err := packageclient.NewPackageClient(kubeConfig)
+	pkgClient, err := packageclient.NewPackageClient(flags.PersistentFlagsDefault.Kubeconfig)
 	if err != nil {
 		return err
 	}

@@ -8,8 +8,9 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"tanzu-package-plugin-poc/packageclients/pkg/packageclient"
-	"tanzu-package-plugin-poc/packageclients/pkg/packagedatamodel"
+	"github.com/vmware-tanzu/tanzu-framework/packageclients/pkg/packageclient"
+	"github.com/vmware-tanzu/tanzu-framework/packageclients/pkg/packagedatamodel"
+	"tanzu-package-plugin-poc/pkg/package/flags"
 
 	"github.com/vmware-tanzu/tanzu-plugin-runtime/component"
 )
@@ -31,7 +32,7 @@ func init() {
 	packageInstalledDeleteCmd.Flags().DurationVarP(&packageInstalledOp.PollInterval, "poll-interval", "", packagedatamodel.DefaultPollInterval, "Time interval between subsequent polls of package deletion status, optional")
 	packageInstalledDeleteCmd.Flags().DurationVarP(&packageInstalledOp.PollTimeout, "poll-timeout", "", packagedatamodel.DefaultPollTimeout, "Timeout value for polls of package deletion status, optional")
 	packageInstalledDeleteCmd.Flags().BoolVarP(&packageInstalledOp.SkipPrompt, "yes", "y", false, "Delete installed package without asking for confirmation, optional")
-	packageInstalledCmd.AddCommand(packageInstalledDeleteCmd)
+	PackageInstalledCmd.AddCommand(packageInstalledDeleteCmd)
 }
 
 func packageUninstall(cmd *cobra.Command, args []string) error {
@@ -44,7 +45,7 @@ func packageUninstall(cmd *cobra.Command, args []string) error {
 		}
 	}
 
-	pkgClient, err := packageclient.NewPackageClient(kubeConfig)
+	pkgClient, err := packageclient.NewPackageClient(flags.PersistentFlagsDefault.Kubeconfig)
 	if err != nil {
 		return err
 	}

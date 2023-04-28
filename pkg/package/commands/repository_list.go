@@ -8,8 +8,9 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"tanzu-package-plugin-poc/packageclients/pkg/packageclient"
-	"tanzu-package-plugin-poc/packageclients/pkg/packagedatamodel"
+	"github.com/vmware-tanzu/tanzu-framework/packageclients/pkg/packageclient"
+	"github.com/vmware-tanzu/tanzu-framework/packageclients/pkg/packagedatamodel"
+	"tanzu-package-plugin-poc/pkg/package/flags"
 
 	"github.com/vmware-tanzu/tanzu-plugin-runtime/component"
 )
@@ -31,11 +32,11 @@ var repositoryListCmd = &cobra.Command{
 func init() {
 	repositoryListCmd.Flags().StringVarP(&outputFormat, "output", "o", "", "Output format (yaml|json|table), optional")
 	repositoryListCmd.Flags().BoolVarP(&repoOp.AllNamespaces, "all-namespaces", "A", false, "If present, list the package repositories across all namespaces, optional")
-	repositoryCmd.AddCommand(repositoryListCmd)
+	PackageRepositoryCmd.AddCommand(repositoryListCmd)
 }
 
 func repositoryList(cmd *cobra.Command, _ []string) error {
-	pkgClient, err := packageclient.NewPackageClient(kubeConfig)
+	pkgClient, err := packageclient.NewPackageClient(flags.PersistentFlagsDefault.Kubeconfig)
 	if err != nil {
 		return err
 	}

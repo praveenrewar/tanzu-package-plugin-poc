@@ -6,12 +6,12 @@ package commands
 import (
 	"github.com/spf13/cobra"
 
-	"tanzu-package-plugin-poc/packageclients/pkg/packagedatamodel"
+	"github.com/vmware-tanzu/tanzu-framework/packageclients/pkg/packagedatamodel"
 )
 
 var repoOp = packagedatamodel.NewRepositoryOptions()
 
-var repositoryCmd = &cobra.Command{
+var PackageRepositoryCmd = &cobra.Command{
 	Use:               "repository",
 	Short:             "Repository operations",
 	ValidArgs:         []string{"add", "list", "get", "delete", "update"},
@@ -21,5 +21,5 @@ var repositoryCmd = &cobra.Command{
 }
 
 func init() {
-	repositoryCmd.PersistentFlags().StringVarP(&repoOp.Namespace, "namespace", "n", "default", "Namespace for repository command, optional")
+	PackageRepositoryCmd.PersistentFlags().StringVarP(&repoOp.Namespace, "namespace", "n", "default", "Namespace for repository command, optional")
 }

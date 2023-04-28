@@ -9,12 +9,13 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 
-	"tanzu-package-plugin-poc/packageclients/pkg/packagedatamodel"
+	"github.com/vmware-tanzu/tanzu-framework/packageclients/pkg/packagedatamodel"
+	"tanzu-package-plugin-poc/pkg/package/flags"
 )
 
 var packageAvailableOp = packagedatamodel.NewPackageAvailableOptions()
 
-var packageAvailableCmd = &cobra.Command{
+var PackageAvailableCmd = &cobra.Command{
 	Use:               "available",
 	ValidArgs:         []string{"list", "get"},
 	Short:             "Manage available packages",
@@ -23,12 +24,12 @@ var packageAvailableCmd = &cobra.Command{
 }
 
 func init() {
-	packageAvailableCmd.PersistentFlags().StringVarP(&packageAvailableOp.Namespace, "namespace", "n", "default", "Namespace of packages, optional")
-	packageAvailableCmd.PersistentFlags().StringVarP(&outputFormat, "output", "o", "", "Output format (yaml|json|table), optional")
+	PackageAvailableCmd.PersistentFlags().StringVarP(&packageAvailableOp.Namespace, "namespace", "n", "default", "Namespace of packages, optional")
+	PackageAvailableCmd.PersistentFlags().StringVarP(&outputFormat, "output", "o", "", "Output format (yaml|json|table), optional")
 }
 
 func packagingAvailabilityCheck(_ *cobra.Command, _ []string) error {
-	found, err := isPackagingAPIAvailable(kubeConfig)
+	found, err := isPackagingAPIAvailable(flags.PersistentFlagsDefault.Kubeconfig)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to check for the availability of '%s' API", packagedatamodel.PackagingAPIName))
 	}

@@ -3,6 +3,8 @@ module tanzu-package-plugin-poc
 go 1.18
 
 replace (
+	github.com/vmware-tanzu/tanzu-framework/apis/run => github.com/vmware-tanzu/tanzu-framework/apis/run v0.0.0-20230104003051-df0d0b36d2aa
+	k8s.io/apimachinery => k8s.io/apimachinery v0.25.0
 	k8s.io/client-go => k8s.io/client-go v0.25.0
 	sigs.k8s.io/cluster-api => sigs.k8s.io/cluster-api v1.2.8
 	sigs.k8s.io/controller-runtime => sigs.k8s.io/controller-runtime v0.12.3
@@ -11,29 +13,26 @@ replace (
 require (
 	github.com/aunum/log v0.0.0-20200821225356-38d2e2c8b489
 	github.com/cppforlife/go-cli-ui v0.0.0-20220622150351-995494831c6c
-	github.com/getkin/kin-openapi v0.94.0
 	github.com/golangci/golangci-lint v1.52.2
-	github.com/google/go-containerregistry v0.13.0
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.27.2
 	github.com/spf13/cobra v1.6.1
 	github.com/vmware-tanzu/carvel-kapp-controller v0.39.0
 	github.com/vmware-tanzu/carvel-kapp-controller/cli v0.0.0-20230406092537-66270d8875f7
-	github.com/vmware-tanzu/carvel-secretgen-controller v0.5.0
-	github.com/vmware-tanzu/carvel-vendir v0.33.1
-	k8s.io/api v0.26.3
+	github.com/vmware-tanzu/tanzu-framework/capabilities/client v0.0.0-20230426074110-26b169607f26
+	github.com/vmware-tanzu/tanzu-framework/packageclients v0.0.0-20230426074110-26b169607f26
 	k8s.io/apiextensions-apiserver v0.26.3
 	k8s.io/apimachinery v0.26.3
-	k8s.io/client-go v0.26.3
-	sigs.k8s.io/controller-runtime v0.13.1
 )
 
 require (
+	github.com/blang/semver v3.5.1+incompatible // indirect
 	github.com/carvel-dev/semver/v4 v4.0.1-0.20230221220520-8090ce423695 // indirect
 	github.com/cppforlife/cobrautil v0.0.0-20221130162803-acdfead391ef // indirect
 	github.com/cppforlife/color v1.9.1-0.20200716202919-6706ac40b835 // indirect
 	github.com/emicklei/go-restful/v3 v3.9.0 // indirect
 	github.com/evanphx/json-patch v5.6.0+incompatible // indirect
+	github.com/getkin/kin-openapi v0.94.0 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-logr/zapr v1.2.3 // indirect
@@ -43,6 +42,7 @@ require (
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/google/gnostic v0.6.9 // indirect
+	github.com/google/go-containerregistry v0.13.0 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/imdario/mergo v0.3.13 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
@@ -59,6 +59,9 @@ require (
 	github.com/otiai10/copy v1.7.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/vito/go-interact v1.0.1 // indirect
+	github.com/vmware-tanzu/carvel-secretgen-controller v0.5.0 // indirect
+	github.com/vmware-tanzu/carvel-vendir v0.33.1 // indirect
+	github.com/vmware-tanzu/tanzu-framework/apis/run v0.0.0-00010101000000-000000000000 // indirect
 	golang.org/x/crypto v0.5.0 // indirect
 	golang.org/x/net v0.8.0 // indirect
 	golang.org/x/oauth2 v0.3.0 // indirect
@@ -67,10 +70,15 @@ require (
 	google.golang.org/appengine v1.6.7 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
+	k8s.io/api v0.26.3 // indirect
+	k8s.io/client-go v0.26.3 // indirect
 	k8s.io/component-base v0.26.3 // indirect
 	k8s.io/klog/v2 v2.80.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20221207184640-f3cff1453715 // indirect
+	k8s.io/kubectl v0.24.0 // indirect
 	k8s.io/utils v0.0.0-20221107191617-1a15be271d1d // indirect
+	sigs.k8s.io/cluster-api v1.2.8 // indirect
+	sigs.k8s.io/controller-runtime v0.13.1 // indirect
 	sigs.k8s.io/json v0.0.0-20220713155537-f223a00ba0e2 // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
@@ -98,7 +106,7 @@ require (
 	github.com/bombsimon/wsl/v3 v3.4.0 // indirect
 	github.com/breml/bidichk v0.2.4 // indirect
 	github.com/breml/errchkjson v0.3.1 // indirect
-	github.com/briandowns/spinner v1.19.0
+	github.com/briandowns/spinner v1.19.0 // indirect
 	github.com/butuzov/ireturn v0.1.1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/charithe/durationcheck v0.0.10 // indirect
@@ -172,7 +180,7 @@ require (
 	github.com/maratori/testpackage v1.1.1 // indirect
 	github.com/matoous/godox v0.0.0-20230222163458-006bad1f9d26 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/mattn/go-isatty v0.0.17
+	github.com/mattn/go-isatty v0.0.17 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.2 // indirect
 	github.com/mbilski/exhaustivestruct v1.2.0 // indirect

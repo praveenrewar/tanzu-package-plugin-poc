@@ -6,12 +6,12 @@ package commands
 import (
 	"github.com/spf13/cobra"
 
-	"tanzu-package-plugin-poc/packageclients/pkg/packagedatamodel"
+	"github.com/vmware-tanzu/tanzu-framework/packageclients/pkg/packagedatamodel"
 )
 
 var packageInstalledOp = packagedatamodel.NewPackageOptions()
 
-var packageInstalledCmd = &cobra.Command{
+var PackageInstalledCmd = &cobra.Command{
 	Use:               "installed",
 	ValidArgs:         []string{"list", "create", "delete", "update", "get"},
 	Short:             "Manage installed packages",

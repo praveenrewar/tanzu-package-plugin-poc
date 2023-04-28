@@ -15,11 +15,16 @@ import (
 	"github.com/spf13/cobra"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 
-	"tanzu-package-plugin-poc/packageclients/pkg/kappclient"
-	"tanzu-package-plugin-poc/packageclients/pkg/packageclient"
+	"github.com/vmware-tanzu/tanzu-framework/packageclients/pkg/kappclient"
+	"github.com/vmware-tanzu/tanzu-framework/packageclients/pkg/packageclient"
+	"github.com/vmware-tanzu/tanzu-framework/packageclients/pkg/packagedatamodel"
+
+	"tanzu-package-plugin-poc/pkg/package/commands/openapischema"
+
+	"tanzu-package-plugin-poc/pkg/package/flags"
 
 	kapppkg "github.com/vmware-tanzu/carvel-kapp-controller/pkg/apiserver/apis/datapackaging/v1alpha1"
-	"tanzu-package-plugin-poc/pkg/package/commands/openapischema"
+	capdiscovery "github.com/vmware-tanzu/tanzu-framework/capabilities/client/pkg/discovery"
 	"github.com/vmware-tanzu/tanzu-plugin-runtime/component"
 )
 
@@ -48,11 +53,12 @@ var packageAvailableGetCmd = &cobra.Command{
 func init() {
 	packageAvailableGetCmd.Flags().BoolVarP(&packageAvailableOp.ValuesSchema, "values-schema", "", false, "Values schema of the package, optional")
 	packageAvailableGetCmd.Flags().BoolVarP(&packageAvailableOp.GenerateDefaultValuesFile, "generate-default-values-file", "", false, "Generate default values from schema of the package, optional")
-	packageAvailableCmd.AddCommand(packageAvailableGetCmd)
+	PackageAvailableCmd.AddCommand(packageAvailableGetCmd)
 }
 
 var pkgName string
 var pkgVersion string
+var outputFormat string
 
 func validatePackage(cmd *cobra.Command, args []string) error {
 	pkgNameVersion := strings.Split(args[0], "/")
@@ -68,7 +74,7 @@ func validatePackage(cmd *cobra.Command, args []string) error {
 }
 
 func packageAvailableGet(cmd *cobra.Command, args []string) error {
-	kc, kcErr := kappclient.NewKappClient(kubeConfig)
+	kc, kcErr := kappclient.NewKappClient(flags.PersistentFlagsDefault.Kubeconfig)
 	if kcErr != nil {
 		return kcErr
 	}
@@ -217,4 +223,34 @@ func generateDefaultValuesForPackage(pkg *kapppkg.Package, valuesFile ...*os.Fil
 	}
 	log.Infof("\nCreated default values file at %s", valuesFileToUse.Name())
 	return nil
+}
+
+// getOutputFormat gets the desired output format for package commands that need the ListTable format
+// for its output.
+func getOutputFormat() string {
+	format := outputFormat
+	if format != string(component.JSONOutputType) && format != string(component.YAMLOutputType) {
+		// For table output, we want to force the list table format for this part
+		format = string(component.ListTableOutputType)
+	}
+	return format
+}
+
+func isPackagingAPIAvailable(kubeCfgPath string) (bool, error) {
+	cfg, err := kappclient.GetKubeConfig(kubeCfgPath)
+	if err != nil {
+		return false, err
+	}
+	clusterQueryClient, err := capdiscovery.NewClusterQueryClientForConfig(cfg)
+	if err != nil {
+		log.Error(err, "failed to create a new instance of the cluster query builder")
+		return false, err
+	}
+
+	apiGroup1 := capdiscovery.Group("packageMetadateAPIQuery", packagedatamodel.DataPackagingAPIName).WithVersions(packagedatamodel.PackagingAPIVersion).WithResource("packagemetadatas")
+	apiGroup2 := capdiscovery.Group("packageAPIQuery", packagedatamodel.DataPackagingAPIName).WithVersions(packagedatamodel.PackagingAPIVersion).WithResource("packages")
+	apiGroup3 := capdiscovery.Group("packageRepositoryAPIQuery", packagedatamodel.PackagingAPIName).WithVersions(packagedatamodel.PackagingAPIVersion).WithResource("packagerepositories")
+	apiGroup4 := capdiscovery.Group("packageInstallAPIQuery", packagedatamodel.PackagingAPIName).WithVersions(packagedatamodel.PackagingAPIVersion).WithResource("packageinstalls")
+
+	return clusterQueryClient.Query(apiGroup1, apiGroup2, apiGroup3, apiGroup4).Execute()
 }

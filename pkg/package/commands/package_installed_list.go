@@ -6,7 +6,8 @@ package commands
 import (
 	"github.com/spf13/cobra"
 
-	"tanzu-package-plugin-poc/packageclients/pkg/kappclient"
+	"github.com/vmware-tanzu/tanzu-framework/packageclients/pkg/kappclient"
+	"tanzu-package-plugin-poc/pkg/package/flags"
 
 	"github.com/vmware-tanzu/tanzu-plugin-runtime/component"
 )
@@ -29,11 +30,11 @@ func init() {
 	packageInstalledListCmd.Flags().BoolVarP(&packageInstalledOp.AllNamespaces, "all-namespaces", "A", false, "If present, list packages across all namespaces, optional")
 	packageInstalledListCmd.Flags().StringVarP(&packageInstalledOp.Namespace, "namespace", "n", "default", "Namespace for installed package CR, optional")
 	packageInstalledListCmd.Flags().StringVarP(&outputFormat, "output", "o", "", "Output format (yaml|json|table), optional")
-	packageInstalledCmd.AddCommand(packageInstalledListCmd)
+	PackageInstalledCmd.AddCommand(packageInstalledListCmd)
 }
 
 func packageInstalledList(cmd *cobra.Command, args []string) error {
-	kc, err := kappclient.NewKappClient(kubeConfig)
+	kc, err := kappclient.NewKappClient(flags.PersistentFlagsDefault.Kubeconfig)
 	if err != nil {
 		return err
 	}

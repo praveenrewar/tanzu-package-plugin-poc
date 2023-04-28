@@ -17,7 +17,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	"tanzu-package-plugin-poc/packageclients/pkg/fakes"
+	"github.com/vmware-tanzu/tanzu-framework/packageclients/pkg/fakes"
 
 	kapppkg "github.com/vmware-tanzu/carvel-kapp-controller/pkg/apiserver/apis/datapackaging/v1alpha1"
 )

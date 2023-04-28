@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"tanzu-package-plugin-poc/pkg/package/commands"
 	"tanzu-package-plugin-poc/pkg/package/flags"
 	"tanzu-package-plugin-poc/pkg/package/kctrl"
 
@@ -35,8 +36,13 @@ func main() {
 		return
 	}
 
+	flags.PersistentFlagsDefault.Set(p)
+
 	p.AddCommands(
-	// Add commands
+		commands.PackageRepositoryCmd,
+		commands.PackageInstallCmd,
+		commands.PackageAvailableCmd,
+		commands.PackageInstalledCmd,
 	)
 	if err := p.Execute(); err != nil {
 		os.Exit(1)
